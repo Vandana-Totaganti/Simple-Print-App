@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paint App</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+        }
+
+        #content {
+            width: 1020px;
+            height: 550px;
+            margin: 0 auto;
+            border: 2px solid blue;
+            margin-top: 30px;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="content">
+        <form>
+            Color : <input type="color" id="color" onchange="changecolor()"/>
+        </form>
+        <canvas id="Mycanvas"></canvas>
+    </div>
+    <script type="text/javascript">
+        var canvas = document.getElementById("Mycanvas");
+        var cntxt = canvas.getContext("2d");
+        var painting = document.getElementById("content");
+        var paintStyle = getComputedStyle(painting);
+        canvas.width = parseInt(paintStyle.getPropertyValue("width"));
+        canvas.height = parseInt(paintStyle.getPropertyValue("height"));
+        var mouse = { x: 0, y: 0 };
+
+        canvas.addEventListener('mousemove', function (e) {
+            mouse.x = e.pageX - this.offsetLeft;
+            mouse.y = e.pageY - this.offsetTop;
+        }, false);
+        cntxt.lineWidth = 4;
+        cntxt.lineJoin = 'round';
+        cntxt.lineCap = 'round';
+
+        function changecolor () {
+            color=document.getElementById("color").value;
+            cntxt.strokeStyle=color;
+        }
+
+        canvas.addEventListener('mousedown', function (e) {
+            cntxt.beginPath();
+            cntxt.moveTo(mouse.x , mouse.y);
+            canvas.addEventListener('mousemove', onPaint, false);
+        }, false);
+
+        canvas.addEventListener('mouseup', function () {
+            canvas.removeEventListener('mousemove', onPaint, false);
+        }, false);
+
+        var onPaint = function () {
+            cntxt.lineTo(mouse.x , mouse.y);
+            cntxt.stroke();
+        };
+    </script>
+</body>
+
+</html>
